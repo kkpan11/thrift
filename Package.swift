@@ -1,3 +1,4 @@
+// swift-tools-version:5.1
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -17,26 +18,15 @@
  * under the License.
  */
 
+import PackageDescription
 
-import Foundation
-import CoreFoundation
-
-#if os(Linux)
-/// Extensions for Linux for incomplete Foundation API's.
-/// swift-corelibs-foundation is not yet 1:1 with OSX/iOS Foundation
-  
-extension UInt {
-  public static func &(lhs: UInt, rhs: Int) -> UInt {
-    let cast = UInt(bitPattern: rhs)
-    return lhs & cast
-  }
-}
-
-#else
-extension CFStreamPropertyKey {
-  static let shouldCloseNativeSocket  = CFStreamPropertyKey(kCFStreamPropertyShouldCloseNativeSocket)
-  // Exists as Stream.PropertyKey.socketSecuritylevelKey but doesn't work with CFReadStreamSetProperty
-  static let socketSecurityLevel      = CFStreamPropertyKey(kCFStreamPropertySocketSecurityLevel)
-  static let SSLSettings              = CFStreamPropertyKey(kCFStreamPropertySSLSettings)
-}
-#endif
+let package = Package(
+  name: "Thrift",
+  products: [
+    .library(name: "Thrift", targets: ["Thrift"])
+  ],
+  targets: [
+    .target(name: "Thrift", path: "lib/swift/Sources"),
+    .testTarget(name: "ThriftTests", dependencies: ["Thrift"], path: "lib/swift/Tests/ThriftTests")
+  ]
+)
